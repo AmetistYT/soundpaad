@@ -94,7 +94,7 @@ impl SoundpadPage {
             
             let btn = Button::with_label(&track_name);
             btn.add_css_class("pill"); btn.add_css_class("suggested-action");
-            btn.set_size_request(120, 44); btn.set_valign(gtk4::Align::Center);
+            btn.set_size_request(100, 40); btn.set_valign(gtk4::Align::Center);
 
             let s_play = self.state.clone();
             btn.connect_clicked(move |_| {

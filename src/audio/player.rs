@@ -60,7 +60,10 @@ impl AudioPlayer {
             )
         };
 
-        let pipeline = gstreamer::parse::launch(&launch_str)?;
+        eprintln!("Play: pipeline={}", launch_str);
+
+        let pipeline = gstreamer::parse::launch(&launch_str)
+            .map_err(|e| { eprintln!("Play: ошибка создания pipeline: {}", e); e })?;
 
         let pipeline_clone = pipeline.clone().downcast::<Pipeline>().unwrap_or_else(|_| {
             Pipeline::new()
@@ -69,7 +72,11 @@ impl AudioPlayer {
         let _watch_guard = bus.add_watch(move |_bus, msg| {
             use gstreamer::MessageView;
             match msg.view() {
-                MessageView::Eos(_) | MessageView::Error(..) => {
+                MessageView::Error(err) => {
+                    eprintln!("Play: pipeline error: {} ({})", err.error(), err.debug().unwrap_or_default());
+                    pipeline_clone.set_state(State::Null).ok();
+                }
+                MessageView::Eos(_) => {
                     pipeline_clone.set_state(State::Null).ok();
                 }
                 _ => {}
@@ -77,7 +84,10 @@ impl AudioPlayer {
             glib::ControlFlow::Continue
         })?;
 
-        pipeline.set_state(State::Playing)?;
+        pipeline.set_state(State::Playing)
+            .map_err(|e| { eprintln!("Play: ошибка запуска: {}", e); e })?;
+
+        eprintln!("Play: запущен track_id={}", track_id);
 
         let pipeline_downcast = pipeline.downcast::<Pipeline>()
             .map_err(|_| anyhow::anyhow!("Pipeline downcast failed"))?;

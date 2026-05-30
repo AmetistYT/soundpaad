@@ -1,4 +1,5 @@
 use adw::prelude::*;
+use gstreamer::prelude::*;
 use gtk4::glib;
 use gtk4::{Box as GtkBox, Button, Entry, Label, ListBox, Orientation, ProgressBar, ScrolledWindow, Stack};
 use std::cell::RefCell;
@@ -127,6 +128,38 @@ impl ShopPage {
                             row.set_margin_start(8); row.set_margin_end(8);
                             let label = Label::new(Some(&sound.name));
                             label.set_hexpand(true); label.set_halign(gtk4::Align::Start);
+
+                            // Кнопка превью
+                            let preview_btn = Button::with_label("");
+                            preview_btn.add_css_class("pill");
+                            let preview_url = sound.url.clone();
+                            preview_btn.connect_clicked(move |_| {
+                                let url = preview_url.clone();
+                                std::thread::spawn(move || {
+                                    if let Ok(client) = MyInstantsClient::new() {
+                                        let mp3 = if url.contains("/media/") { url.clone() } else { client.get_sound_mp3_url(&url).unwrap_or_default() };
+                                        if mp3.is_empty() { return; }
+                                        let full_url = if mp3.starts_with("http") { mp3 } else { format!("https://www.myinstants.com{}", mp3) };
+                                        eprintln!("Preview: {}", full_url);
+                                        let launch = format!("uridecodebin uri=\"{}\" ! audioconvert ! audioresample ! autoaudiosink", full_url);
+                                        if let Ok(pipe) = gstreamer::parse::launch(&launch) {
+                                            let pipe = pipe.downcast::<gstreamer::Pipeline>().unwrap_or_else(|_| gstreamer::Pipeline::new());
+                                            if pipe.set_state(gstreamer::State::Playing).is_ok() {
+                                                let bus = pipe.bus().unwrap();
+                                                let msg = bus.timed_pop_filtered(
+                                                    Some(gstreamer::ClockTime::from_seconds(30)),
+                                                    &[gstreamer::MessageType::Eos, gstreamer::MessageType::Error],
+                                                );
+                                                if msg.is_none() {
+                                                    eprintln!("Preview: таймаут");
+                                                }
+                                                let _ = pipe.set_state(gstreamer::State::Null);
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+
                             let btn = Button::with_label("Скачать"); btn.add_css_class("pill");
                             let u = sound.url.clone(); let n = sound.name.clone(); let s = s_dl.clone();
                             btn.connect_clicked(move |_| {
@@ -144,7 +177,7 @@ impl ShopPage {
                                     }
                                 });
                             });
-                            row.append(&label); row.append(&btn); lb_ref.append(&row);
+                            row.append(&label); row.append(&preview_btn); row.append(&btn); lb_ref.append(&row);
                         }
                         st_ref.set_visible_child_name("results"); pr_ref.set_fraction(0.0);
                     }
