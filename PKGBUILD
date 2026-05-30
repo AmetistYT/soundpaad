@@ -13,9 +13,9 @@ conflicts=('soundpaad')
 source=("soundpaad-${pkgver}::https://github.com/AmetistYT/soundpaad/releases/download/v${pkgver}/soundpaad"
         "com.soundpaad.app.desktop"
         "com.soundpaad.app.svg")
-sha256sums=('SKIP'
-            'SKIP'
-            'SKIP')
+sha256sums=('f7dcb2f4ec746582700c18f5a1dbd95c06f3a2f348eb5cb1e35ec7d406e8c9d2'
+            '8359701edad14fde483728eb275dee9b7c8052e4b9a4d470af150b805dec1926'
+            '711a600b092364e9b787243d9c234b9e44582cba7a6261b79f305a0323e08785')
 
 package() {
     install -Dm755 "soundpaad-${pkgver}" "${pkgdir}/usr/bin/soundpaad"
