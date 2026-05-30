@@ -1,0 +1,163 @@
+warning: unused import: `crate::db::models::Bind`
+ --> src/ui/binds.rs:8:5
+  |
+8 | use crate::db::models::Bind;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: use of deprecated macro `clone`: Using old-style clone! syntax
+   --> src/ui/shop.rs:105:36
+    |
+105 |           search_btn.connect_clicked(glib::clone!(@weak search_entry => move |_| {
+    |  ____________________________________^
+106 | |             let q = search_entry.text().to_string(); if q.is_empty() { return; }
+107 | |             st_search.set_visible_child_name("loading"); pr_search.set_fraction(0.1);
+108 | |             let s = s_search.clone();
+...   |
+115 | |             });
+116 | |         }));
+    | |__________^
+    |
+    = note: `#[warn(deprecated)]` on by default
+    = note: this warning originates in the macro `glib::clone` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+warning: unused import: `FlowBoxChild`
+ --> src/ui/soundpad.rs:2:41
+  |
+2 | use gtk4::{Button, FileDialog, FlowBox, FlowBoxChild, Label, Orientation, ScrolledWindow, gio};
+  |                                         ^^^^^^^^^^^^
+
+warning: use of deprecated struct `gtk4::MessageDialog`: Since 4.10
+   --> src/ui/soundpad.rs:138:24
+    |
+138 |     let dialog = gtk4::MessageDialog::new(None::<&gtk4::Window>, gtk4::DialogFlags::MODAL, gtk4::MessageType::Question, gtk4::ButtonsType::None, &format!("Назначить хоткей для «{}»\nНажмите комбинацию клавиш...", tr...
+    |                        ^^^^^^^^^^^^^
+
+warning: use of deprecated method `gtk4::prelude::WidgetExt::show`: Since 4.10
+  --> src/ui/app.rs:86:16
+   |
+86 |         window.show();
+   |                ^^^^
+
+warning: use of deprecated method `gtk4::prelude::WidgetExt::show`: Since 4.10
+   --> src/ui/soundpad.rs:128:102
+    |
+128 |                 let btn_widget = gesture.widget().unwrap(); popover.set_parent(&btn_widget); popover.show();
+    |                                                                                                      ^^^^
+
+warning: use of deprecated associated function `gtk4::message_dialog::<impl gtk4::MessageDialog>::new`: Since 4.10
+   --> src/ui/soundpad.rs:138:39
+    |
+138 |     let dialog = gtk4::MessageDialog::new(None::<&gtk4::Window>, gtk4::DialogFlags::MODAL, gtk4::MessageType::Question, gtk4::ButtonsType::None, &format!("Назначить хоткей для «{}»\nНажмите комбинацию клавиш...", tr...
+    |                                       ^^^
+
+warning: use of deprecated method `gtk4::prelude::DialogExt::add_button`: Since 4.10
+   --> src/ui/soundpad.rs:139:12
+    |
+139 |     dialog.add_button("Отмена", gtk4::ResponseType::Cancel); dialog.add_button("Сохранить", gtk4::ResponseType::Accept);
+    |            ^^^^^^^^^^
+
+warning: use of deprecated method `gtk4::prelude::DialogExt::add_button`: Since 4.10
+   --> src/ui/soundpad.rs:139:69
+    |
+139 |     dialog.add_button("Отмена", gtk4::ResponseType::Cancel); dialog.add_button("Сохранить", gtk4::ResponseType::Accept);
+    |                                                                     ^^^^^^^^^^
+
+warning: use of deprecated method `gtk4::prelude::DialogExt::content_area`: Since 4.10
+   --> src/ui/soundpad.rs:141:12
+    |
+141 |     dialog.content_area().append(&keyval_label);
+    |            ^^^^^^^^^^^^
+
+warning: use of deprecated method `gtk4::prelude::DialogExt::connect_response`: Since 4.10
+   --> src/ui/soundpad.rs:158:12
+    |
+158 |     dialog.connect_response(move |dialog, response| {
+    |            ^^^^^^^^^^^^^^^^
+
+warning: use of deprecated method `gtk4::prelude::WidgetExt::show`: Since 4.10
+   --> src/ui/soundpad.rs:168:12
+    |
+168 |     dialog.show();
+    |            ^^^^
+
+warning: unused variable: `soundpad_ref`
+  --> src/ui/app.rs:58:13
+   |
+58 |         let soundpad_ref = soundpad_page.clone();
+   |             ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_soundpad_ref`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `window` is never read
+  --> src/ui/app.rs:17:5
+   |
+16 | pub struct AppUI {
+   |            ----- field in this struct
+17 |     window: ApplicationWindow,
+   |     ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: field `state` is never read
+  --> src/ui/settings.rs:10:5
+   |
+ 8 | pub struct SettingsPage {
+   |            ------------ field in this struct
+ 9 |     container: gtk4::Box,
+10 |     state: Rc<RefCell<AppState>>,
+   |     ^^^^^
+
+warning: field `0` is never read
+  --> src/ui/shop.rs:14:11
+   |
+14 |     Error(String),
+   |     ----- ^^^^^^
+   |     |
+   |     field in this variant
+   |
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+   |
+14 -     Error(String),
+14 +     Error(()),
+   |
+
+warning: fields `listbox`, `stack`, `progress`, and `state` are never read
+  --> src/ui/shop.rs:20:5
+   |
+18 | pub struct ShopPage {
+   |            -------- fields in this struct
+19 |     container: gtk4::Box,
+20 |     listbox: ListBox,
+   |     ^^^^^^^
+21 |     stack: Stack,
+   |     ^^^^^
+22 |     progress: ProgressBar,
+   |     ^^^^^^^^
+23 |     state: Rc<RefCell<AppState>>,
+   |     ^^^^^
+
+warning: `soundpaad` (bin "soundpaad") generated 17 warnings (run `cargo fix --bin "soundpaad" -p soundpaad` to apply 3 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.15s
+     Running `target/debug/soundpaad`
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.221: Theme directory status/32 of theme breeze-plus-dark has no size field
+
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.221: Theme directory status/48 of theme breeze-plus-dark has no size field
+
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.221: Theme directory status/64 of theme breeze-plus-dark has no size field
+
+
+(soundpaad:462324): Adwaita-WARNING **: 19:03:33.269: Using GtkSettings:gtk-application-prefer-dark-theme with libadwaita is unsupported. Please use AdwStyleManager:color-scheme instead.
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.326: Theme directory status/32 of theme breeze-plus-dark has no size field
+
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.326: Theme directory status/48 of theme breeze-plus-dark has no size field
+
+
+(soundpaad:462324): Gtk-WARNING **: 19:03:33.326: Theme directory status/64 of theme breeze-plus-dark has no size field
+
